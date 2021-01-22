@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import AuthorForm
 from .models import Author
+from rest_framework import generics
+from .serializers import *
 
 
 def authors(request):
@@ -49,3 +51,16 @@ def update_author(request, pk):
 def delete_author(request, pk):
     Author.delete_by_id(pk)
     return redirect('/authors/')
+
+
+class AuthorListCreate(generics.ListAPIView, generics.CreateAPIView):
+    serializer_class = AuthorCommonSerializer
+    queryset = Author.objects.all()
+
+
+class AuthorViewUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AuthorCommonSerializer
+    queryset = Author.objects.all()
+
+
+

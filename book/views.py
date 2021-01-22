@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Book
 from .forms import BookForm
 from order.models import Order
+from rest_framework import generics
+from .serializers import *
 
 
 def books(request):
@@ -53,3 +55,13 @@ def update_book(request, pk):
 def delete_book(request, pk):
     Book.delete_by_id(pk)
     return redirect('/books/')
+
+
+class BookListCreate(generics.ListAPIView, generics.CreateAPIView):
+    serializer_class = BookCommonSerializer
+    queryset = Book.objects.all()
+
+
+class BookViewUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BookCommonSerializer
+    queryset = Book.objects.all()
